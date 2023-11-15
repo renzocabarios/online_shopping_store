@@ -5,8 +5,7 @@ import { useState } from "react";
 
 export default function ({ children }: any) {
   const [showModal, setshowModal] = useState(false);
-
-  const { addToCart, cartItems, increment, decrement, removeItem, clearCart } =
+  const { cartItems, increment, decrement, removeItem, clearCart } =
     useCartStore() as any;
   return (
     <>

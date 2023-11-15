@@ -1,16 +1,25 @@
 import { create } from "zustand";
 import data from "./items.json" assert { type: "json" };
+import {
+  ICartItem,
+  IItem,
+  IUseCartStore,
+  IUseCategoryStore,
+  IUseItemStore,
+} from "../interfaces";
 
-export const useItemStore = create((set) => {
+const ITEMS: IItem[] = JSON.parse(JSON.stringify(data)) as IItem[];
+
+export const useItemStore = create<IUseItemStore>((set) => {
   return {
     items: [],
     getItems: () => {
-      set(() => ({ items: data }));
+      set(() => ({ items: ITEMS }));
     },
   };
 });
 
-export const useCategoryStore = create((set) => {
+export const useCategoryStore = create<IUseCategoryStore>((set) => {
   return {
     categories: [],
     getCategories: () => {
@@ -21,14 +30,14 @@ export const useCategoryStore = create((set) => {
   };
 });
 
-export const useCartStore = create((set) => {
+export const useCartStore = create<IUseCartStore>((set) => {
   return {
     cartItems: [],
-    addToCart: (item: any) => {
+    addToCart: (item: IItem) => {
       set((state: any) => {
-        const exists = state.cartItems.find((e: any) => e.id == item.id);
+        const exists = state.cartItems.find((e: ICartItem) => e.id == item.id);
         if (exists) {
-          const mapped = state.cartItems.map((e: any) => {
+          const mapped = state.cartItems.map((e: ICartItem) => {
             if (e.id == item.id) e.quantity++;
             return e;
           });
@@ -41,9 +50,9 @@ export const useCartStore = create((set) => {
         };
       });
     },
-    removeItem: (item: any) => {
-      set((state: any) => {
-        const filtered = state.cartItems.filter((e: any) => {
+    removeItem: (item: IItem) => {
+      set((state: IUseCartStore) => {
+        const filtered = state.cartItems.filter((e: ICartItem) => {
           return e.id != item.id;
         });
         return {
@@ -58,9 +67,9 @@ export const useCartStore = create((set) => {
         };
       });
     },
-    increment: (item: any) => {
-      set((state: any) => {
-        const mapped = state.cartItems.map((e: any) => {
+    increment: (item: IItem) => {
+      set((state: IUseCartStore) => {
+        const mapped = state.cartItems.map((e: ICartItem) => {
           if (e.id == item.id) e.quantity++;
           return e;
         });
@@ -69,9 +78,9 @@ export const useCartStore = create((set) => {
         };
       });
     },
-    decrement: (item: any) => {
-      set((state: any) => {
-        const mapped = state.cartItems.map((e: any) => {
+    decrement: (item: IItem) => {
+      set((state: IUseCartStore) => {
+        const mapped = state.cartItems.map((e: ICartItem) => {
           if (e.id == item.id && e.quantity > 0) e.quantity--;
           return e;
         });
